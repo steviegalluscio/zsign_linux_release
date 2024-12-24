@@ -1,0 +1,24 @@
+name: Build
+on:
+  workflow_dispatch:
+
+jobs:
+  bash-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Install script
+        run: bash INSTALL.sh
+
+      - name: List files in the repository
+        run: |
+          ls ${{ github.workspace }}/build
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifact
+          path: build/
