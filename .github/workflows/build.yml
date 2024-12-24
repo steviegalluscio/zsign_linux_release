@@ -3,25 +3,23 @@ on:
   workflow_dispatch:
 
 jobs:
-  bash-script:
+  build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
+        
       - name: Get dependencies
         run: sudo apt-get install cmake zip unzip build-essential checkinstall zlib1g-dev libssl-dev -y
 
       - name: Compile zsign
         run: mkdir build; cd build && cmake .. && make
 
-      - name: List files in the repository
-        run: |
-          ls ${{ github.workspace }}/build
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
+      - name: Rename the binary
+        run: mv build/zsign zsign-linux-x86-64
+      
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
         with:
-          name: build-artifact
-          path: build/
+          files: zsign-linux-x86-64
