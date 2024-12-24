@@ -10,8 +10,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Run Install script
-        run: bash INSTALL.sh
+      - name: Get dependencies
+        run: sudo apt-get install cmake zip unzip build-essential checkinstall zlib1g-dev libssl-dev -y
+
+      - name: Compile zsign
+        run: mkdir build; cd build && cmake .. && make
 
       - name: List files in the repository
         run: |
